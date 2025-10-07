@@ -4,7 +4,8 @@ namespace Database\Seeders;
 
 use App\Models\User;
 use Illuminate\Database\Seeder;
-use Illuminate\Database\Console\Seeds\WithoutModelEvents;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Hash;
 
 class UserSeeder extends Seeder
 {
@@ -13,24 +14,70 @@ class UserSeeder extends Seeder
      */
     public function run(): void
     {
-        $users = [
+        $admins = [
             [
-                "user_name" => "Admin",
-                "email"     => "admin@gmail.com",
-                "password"  => "Ks82787294",
-                'role'      => "Admin"
+                "user_name" => "John Doe",
+                "email"     => "johndoe@gmail.com",
+                "password"  => Hash::make("Ks82787294"),
+                "role"      => "Admin"
             ],
             [
-                "user_name" => "User",
-                "email"     => "user@gmail.com",
-                "password"  => "Ks82787294",
-                'role'      => "Tenant"
-            ]
+                "user_name" => "Alice Doe",
+                "email"     => "alice244doe@gmail.com",
+                "password"  => Hash::make("Ks82787294"),
+                "role"      => "Admin"
+            ],
+              [
+                "user_name" => "Alice Doe",
+                "email"     => "aliced242oe@gmail.com",
+                "password"  => Hash::make("Ks82787294"),
+                "role"      => "Admin"
+              ],
+                [
+                "user_name" => "Alice Doe",
+                "email"     => "aliced2424oe@gmail.com",
+                "password"  => Hash::make("Ks82787294"),
+                "role"      => "Admin"
+                ],
+                  [
+                "user_name" => "Alice Doe",
+                "email"     => "alicedoe114@gmail.com",
+                "password"  => Hash::make("Ks82787294"),
+                "role"      => "Admin"
+                  ],
+                    [
+                "user_name" => "Alice Doe",
+                "email"     => "aliced221oe@gmail.com",
+                "password"  => Hash::make("Ks82787294"),
+                "role"      => "Admin"
+                    ],
+                      [
+                "user_name" => "Alice Doe",
+                "email"     => "alicedo22e@gmail.com",
+                "password"  => Hash::make("Ks82787294"),
+                "role"      => "Admin"
+                      ],
         ];
 
-        foreach($users as $user) {
-            User::create($user);
+        foreach ($admins as $admin) {
+            User::create($admin);
         }
 
+        $tenants = DB::table('tenants')
+            ->select('id as tenant_id')
+            ->selectRaw('names[1] as first_tenant_name') // get the first name from names array
+            ->selectRaw('emails[1] as first_tenant_email') // get the first email from emails array
+            ->get();
+
+
+        foreach ($tenants as $tenant) {
+            User::create([
+                "user_name" => $tenant->first_tenant_name,
+                "email"     => $tenant->first_tenant_email,
+                "password"  => Hash::make("Ks82787294"),
+                "role"      => "Tenant",
+                "tenant_id" => $tenant->tenant_id
+            ]);
+        }
     }
 }
